@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GFN CHECK PING ( VIET NAM )</title>
+  <link rel="icon" href="/ef/img/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/ef/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>GFN Ping Checker</h1>
+        <p class="sub">Đo độ trễ tới tất cả server GeForce NOW và tìm server nhanh nhất</p>
+      </div>
+      <div class="actions">
+        <button class="btn" id="exportBtn">Xuất CSV</button>
+        <button class="btn primary" id="runBtn">Bắt đầu kiểm tra</button>
+      </div>
+    </header>
+
+    <section class="summary">
+      <div class="card best">
+        <div class="k">Server tốt nhất</div>
+        <div class="v" id="bestName">—</div>
+        <div class="s" id="bestSub">Chạy kiểm tra để xem kết quả</div>
+      </div>
+      <div class="card">
+        <div class="k">Đã kiểm tra</div>
+        <div class="v" id="testedV">0 / 0</div>
+        <div class="s" id="failedS">&nbsp;</div>
+      </div>
+      <div class="card">
+        <div class="k">Ping trung bình</div>
+        <div class="v" id="avgV">—</div>
+        <div class="s">các server kết nối được</div>
+      </div>
+      <div class="card">
+        <div class="k">Dưới 40 ms</div>
+        <div class="v" id="goodV">0</div>
+        <div class="s">NVIDIA khuyến nghị</div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="Tìm zone hoặc khu vực, ví dụ AMS hoặc EU West" aria-label="Tìm server">
+      <select id="regionSel" aria-label="Lọc theo khu vực"></select>
+      <select id="gpuSel" aria-label="Lọc theo GPU">
+        <option value="all">Tất cả GPU</option>
+        <option value="4080">Chỉ RTX 4080</option>
+        <option value="5080">Chỉ RTX 5080</option>
+      </select>
+      <button class="btn" id="scanBtn">Quét thêm zone</button>
+    </div>
+    <p class="note" id="scanInfo" style="margin:0 0 14px">Mẹo: “Quét thêm zone” sẽ thử các tên zone phổ biến và thêm những zone phản hồi.</p>
+    <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+
+    <div class="tablebox">
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th data-k="name">Server</th>
+              <th data-k="region">Khu vực</th>
+              <th data-k="avg" class="num">Ping</th>
+              <th data-k="min" class="num">Tốt nhất</th>
+              <th data-k="jitter" class="num">Jitter</th>
+              <th data-k="loss" class="num">Mất gói</th>
+              <th data-k="avg">Chất lượng</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <details>
+      <summary>Cài đặt & Server tùy chỉnh</summary>
+      <div class="row">
+        <label for="samples">Số lần đo / server</label>
+        <select id="samples">
+          <option>3</option>
+          <option selected>5</option>
+          <option>8</option>
+          <option>12</option>
+        </select>
+        <label for="timeout">Timeout</label>
+        <select id="timeout">
+          <option value="2000">2 giây</option>
+          <option value="3000" selected>3 giây</option>
+          <option value="5000">5 giây</option>
+        </select>
+        <label for="conc">Song song</label>
+        <select id="conc">
+          <option>1</option>
+          <option selected>3</option>
+          <option>6</option>
+        </select>
+      </div>
+      <p class="note" style="margin-top:16px">
+        <b>Cách thêm server:</b> nhập Zone ID như <code>NP-TYO-02</code> (tool sẽ tự thêm <code>.cloudmatchbeta.nvidiagrid.net</code>) hoặc dán hostname đầy đủ, có thể thêm nhãn khu vực, rồi bấm <b>Thêm server</b>. Server mới sẽ hiện với thẻ “Tùy chỉnh”.
+      </p>
+      <div class="row">
+        <input type="text" id="cName" placeholder="Zone ID (NP-TYO-01) hoặc hostname đầy đủ" aria-label="Server tùy chỉnh">
+        <input type="text" id="cRegion" placeholder="Nhãn khu vực (tùy chọn)" aria-label="Nhãn khu vực" style="max-width:220px">
+        <button class="btn" id="addBtn">Thêm server</button>
+      </div>
+      <p class="note">
+        Ping được đo bằng request HTTPS tới endpoint CloudMatch của mỗi zone (request đầu bị bỏ để warm-up). Kết quả gần với ping ICMP thực tế. Server chặn request sẽ hiện “Không kết nối được”. Dữ liệu được lưu trong trình duyệt.
+      </p>
+    </details>
+  </div>
+
+  <script src="/ef/script.js"></script>
+</body>
+</html>
